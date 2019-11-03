@@ -6,25 +6,34 @@ using UnityEditor.SceneManagement;
 
 public class FirstSceneController : MonoBehaviour, IUserAction, ISceneController
 {
-    public SpiderFactory spider_factory;                               //巡逻者工厂
-    public ScoreRecorder recorder;                                   //记录员
-    public SpiderActionManager action_manager;                       //运动管理器
-    public int wall_sign = -1;                                       //当前玩家所处哪个格子
-    public GameObject player;                                        //玩家
-    public Camera main_camera;                                       //主相机
-    public float player_speed = 10;                                  //玩家移动速度
-    private List<GameObject> spiders;                                //场景中巡逻者列表
-    private bool game_over = false;                                  //游戏结束
+    public SpiderFactory spider_factory;                               
+    public ScoreRecorder recorder;                                  
+    public SpiderActionManager action_manager;                   
+    public int wall_sign = -1;
+    public GameObject player;
+    public Camera main_camera;                                       
+    public float player_speed = 10;                                  
+    private List<GameObject> spiders;                               
+    private bool game_over = false;                              
 
     
     void Start()
     {
+		Debug.Log ("start");
         SSDirector director = SSDirector.GetInstance();
         director.CurrentScenceController = this;
         spider_factory = Singleton<SpiderFactory>.Instance;
         action_manager = gameObject.AddComponent<SpiderActionManager>() as SpiderActionManager;
-        LoadResources();
+		Instantiate(Resources.Load<GameObject>("Prefabs/Maze"));
+		player = Instantiate(Resources.Load("Prefabs/Player"), new Vector3(0, 9, 0), Quaternion.identity) as GameObject;
+		spiders = spider_factory.GetSpiders();
+		for (int i = 0; i < spiders.Count; i++)
+		{
+			action_manager.GoSpider(spiders[i]);
+		}
         main_camera.GetComponent<CameraFlow>().follow = player;
+		main_camera.GetComponent<CameraFlow>().enabled = true;
+		Debug.Log ("camera");
         recorder = Singleton<ScoreRecorder>.Instance;
     }
 
@@ -36,20 +45,7 @@ public class FirstSceneController : MonoBehaviour, IUserAction, ISceneController
         }
 
     }
-
-    public void LoadResources()
-    {
-        //Debug.Log("123");
-        Instantiate(Resources.Load<GameObject>("Prefabs/Maze"));
-        player = Instantiate(Resources.Load("Prefabs/Player"), new Vector3(0, 9, 0), Quaternion.identity) as GameObject;
-        spiders = spider_factory.GetSpiders();
-        //所有侦察兵移动
-        for (int i = 0; i < spiders.Count; i++)
-        {
-            action_manager.GoSpider(spiders[i]);
-        }
-    }
-    //玩家移动
+		
     public void MovePlayer(float translationX, float translationZ)
     {
         if(!game_over)
@@ -62,7 +58,6 @@ public class FirstSceneController : MonoBehaviour, IUserAction, ISceneController
             {
                 player.GetComponent<Animator>().SetBool("run", false);
             }
-            //移动和旋转
 			if (translationZ > 0) {
 				player.transform.rotation =  Quaternion.LookRotation(new Vector3(0, 0, 100));
 				player.transform.Translate(0, 0, translationZ * player_speed * Time.deltaTime);
@@ -81,7 +76,7 @@ public class FirstSceneController : MonoBehaviour, IUserAction, ISceneController
 				player.transform.Translate(0, 0, -translationX * player_speed * Time.deltaTime);
 			}
 
-            //防止碰撞带来的移动
+            
             if (player.transform.localEulerAngles.x != 0 || player.transform.localEulerAngles.z != 0)
             {
                 player.transform.localEulerAngles = new Vector3(0, player.transform.localEulerAngles.y, 0);
@@ -107,21 +102,17 @@ public class FirstSceneController : MonoBehaviour, IUserAction, ISceneController
 
     void OnEnable()
     {
+		Debug.Log ("en");
         GameEventManager.ScoreChange += AddScore;
         GameEventManager.GameoverChange += Gameover;
         
-    }
-    void OnDisable()
-    {
-        GameEventManager.ScoreChange -= AddScore;
-        GameEventManager.GameoverChange -= Gameover;
-      
     }
 
     void AddScore()
     {
         recorder.AddScore();
     }
+    
     void Gameover()
     {
         game_over = true;

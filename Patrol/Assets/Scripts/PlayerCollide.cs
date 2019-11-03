@@ -7,11 +7,10 @@ public class PlayerCollide : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        //当玩家与侦察兵相撞
         if (other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponent<Animator>().SetTrigger("death");
-            this.GetComponent<Animator>().SetTrigger("attack");
+			this.GetComponent<Animator>().SetTrigger("attack");
+			other.gameObject.GetComponent<Animator>().SetTrigger("death");
             Singleton<GameEventManager>.Instance.PlayerGameover();
         }
     }

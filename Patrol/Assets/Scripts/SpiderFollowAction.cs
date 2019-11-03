@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SpiderFollowAction : SSAction
 {
-    private float speed = 2f;            //跟随玩家的速度
-    private GameObject player;           //玩家
-    private SpiderData data;             //侦查兵数据
+    private float speed = 2f;            
+    private GameObject player;           
+    private SpiderData data;             
 
     private SpiderFollowAction() { }
     public static SpiderFollowAction GetSSAction(GameObject player)
@@ -28,7 +28,7 @@ public class SpiderFollowAction : SSAction
         }
          
         Follow();
-        //如果侦察兵没有跟随对象，或者需要跟随的玩家不在侦查兵的区域内
+        
         if (!data.follow_player || data.wall_sign != data.sign)
         {
             this.destroy = true;

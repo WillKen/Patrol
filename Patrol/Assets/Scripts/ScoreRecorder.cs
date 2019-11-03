@@ -5,9 +5,8 @@ using UnityEngine;
 public class ScoreRecorder : MonoBehaviour
 {
     public FirstSceneController sceneController;
-    public int score = 0;                            //分数
+    public int score = 0;
 
-    // Use this for initialization
     void Start()
     {
         sceneController = (FirstSceneController)SSDirector.GetInstance().CurrentScenceController;

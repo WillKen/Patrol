@@ -12,7 +12,7 @@ public class AreaCollide : MonoBehaviour
     }
     void OnTriggerEnter(Collider collider)
     {
-        //标记玩家进入自己的区域
+		sceneController = SSDirector.GetInstance().CurrentScenceController as FirstSceneController;
         if (collider.gameObject.tag == "Player")
         {
             sceneController.wall_sign = sign;

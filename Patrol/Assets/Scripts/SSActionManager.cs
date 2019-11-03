@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SSActionManager : MonoBehaviour, ISSActionCallback
 {
-    private Dictionary<int, SSAction> actions = new Dictionary<int, SSAction>();    //将执行的动作的字典集合
-    private List<SSAction> waitingAdd = new List<SSAction>();                       //等待去执行的动作列表
-    private List<int> waitingDelete = new List<int>();                              //等待删除的动作的key                
+    private Dictionary<int, SSAction> actions = new Dictionary<int, SSAction>();    
+    private List<SSAction> waitingAdd = new List<SSAction>();                       
+    private List<int> waitingDelete = new List<int>();                                            
 
     protected void Update()
     {
@@ -25,7 +25,6 @@ public class SSActionManager : MonoBehaviour, ISSActionCallback
             }
             else if (ac.enable)
             {
-                //运动学运动更新
                 ac.Update();
             }
         }
@@ -52,16 +51,14 @@ public class SSActionManager : MonoBehaviour, ISSActionCallback
     {
         if(intParam == 0)
         {
-            //侦查兵跟随玩家
             SpiderFollowAction follow = SpiderFollowAction.GetSSAction(objectParam.gameObject.GetComponent<SpiderData>().player);
             this.RunAction(objectParam, follow, this);
         }
         else
         {
-            //侦察兵按照初始位置开始继续巡逻
+            
             GoSpiderAction move = GoSpiderAction.GetSSAction(objectParam.gameObject.GetComponent<SpiderData>().start_position);
             this.RunAction(objectParam, move, this);
-            //玩家逃脱
             Singleton<GameEventManager>.Instance.PlayerEscape();
         }
     }

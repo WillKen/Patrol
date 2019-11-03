@@ -8,7 +8,6 @@ public class SpiderCollide : MonoBehaviour
     {
         if (collider.gameObject.tag == "Player")
         {
-            //玩家进入侦察兵追捕范围
             this.gameObject.transform.parent.GetComponent<SpiderData>().follow_player = true;
             this.gameObject.transform.parent.GetComponent<SpiderData>().player = collider.gameObject;
         }
